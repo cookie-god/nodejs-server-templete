@@ -4,10 +4,17 @@ const crypto = require('crypto');
 
 const userService = require('../service/userService.js');
 const util = require('../function.js');
+const logger = require('../winston.js');
+
 
 let secret_key = 'server_jwt_key_01022237869';
 
+/*
+1. 회원가입
+20.12.29
+*/
 exports.enroll = async function(req, res){
+    logger.info('POST /users/enroll');
     const {
         id, password, name, age
     } = req.body;
@@ -44,11 +51,17 @@ exports.enroll = async function(req, res){
 
         return res.json(util.returnMake(data, true, 200, '회원가입 성공'));
     } catch (err) {
+        logger.error('POST /users/enroll error');
         return res.status(500).send(`Error: ${err.message}`);
     }
 }
 
+/*
+2. 로그인
+20.12.29
+*/
 exports.login = async function (req, res) {
+    logger.info('POST /users/login');
     const {
         id, password
     } = req.body;
@@ -96,6 +109,7 @@ exports.login = async function (req, res) {
         return res.json(data);
 
     }catch(err) {
+        logger.error('POST /users/enroll error');
         return false;
     }
 };

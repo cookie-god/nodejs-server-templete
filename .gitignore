@@ -108,3 +108,12 @@ database.js
 
 #jwt
 secret.js
+
+#node_modules
+node_modules
+
+#package-lock.json
+package-lock.json
+
+#log
+log
