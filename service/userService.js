@@ -1,9 +1,10 @@
 const { pool } = require('../database.js');
+const logger = require('../winston.js');
 
 async function userIdCheck(id) {
     const connection = await pool.getConnection(async (conn) => conn);
     const selectIdQuery = `
-                SELECT COUNT(1) as CNT 
+                SELECT COUNT(*) as CNT 
                 FROM User 
                 WHERE userId = ?;
                   `;
@@ -39,12 +40,12 @@ async function selectUserInfo(id) {
                   `;
   
     let selectUserInfoParams = [id];
-    const [userInfoRows] = await connection.query(
+    const userInfoRows = await connection.query(
       selectUserInfoQuery,
       selectUserInfoParams
     );
     connection.release();
-    return [userInfoRows];
+    return userInfoRows[0];
   }
 
 module.exports = {

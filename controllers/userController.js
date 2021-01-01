@@ -41,7 +41,7 @@ exports.enroll = async function(req, res){
 
     try {
         const idRows = await userService.userIdCheck(id);
-        if(idRows[0].CNT > 0) {
+        if(idRows.CNT > 0) {
             return res.json(util.returnMake(data, false, 308, '중복된 아이디입니다.'));
         }
 
@@ -77,21 +77,20 @@ exports.login = async function (req, res) {
         return res.json(util.returnMake(data, false, 303, '비밀번호를 입력해주세요.'));
     
     try {
-        const [userInfoRows] = await userService.selectUserInfo(id)
-
+        const userInfoRows = await userService.selectUserInfo(id);
         if(userInfoRows.length < 1) {
             return res.json(util.returnMake(data, false, 304, '아이디를 확인해주세요.'));
         }
 
         const hashedPassword = await crypto.createHash('sha512').update(password).digest('hex');
-        if(userInfoRows[0].userPw !== hashedPassword) {
+        if(userInfoRows.userPw !== hashedPassword) {
             return res.json(util.returnMake(data, false, 305, '비밀번호를 확인해주세요.'));
         }
 
             //토큰 생성
         let token = await jwt.sign({
-                id: userInfoRows[0].userId,
-                password: userInfoRows[0].userPw
+                id: userInfoRows.userId,
+                password: userInfoRows.userPw
             }, // 토큰의 내용(payload)
            secret_key, // 비밀 키
             {
